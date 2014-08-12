@@ -113,9 +113,6 @@
             });
         }
 
-        var first_elements_ids = get_element_ids();
-        var color_selected = '{{ inline_admin_formset.formset.ng_sortable_color_selected }}';
-        var color_new = '{{ inline_admin_formset.formset.ng_sortable_color_new }}';
 
         var get_element_ids = function() {
             var ids = [];
@@ -133,6 +130,7 @@
         }
 
         var add_row = function() {
+            var $ = isortable.jQuery;
             var $tbody = $('div.{{ inline_admin_formset.formset.ng_sortable_class_name }} table tbody');
             var $rows = $('tr.form-row:not(".empty-form")', $tbody);
             var $last_tr = $rows.last();
@@ -171,23 +169,26 @@
         });
 
 
+        var first_elements_ids = get_element_ids();
+        var color_selected = '{{ inline_admin_formset.formset.ng_sortable_color_selected }}';
+        var color_new = '{{ inline_admin_formset.formset.ng_sortable_color_new }}';
 
+        isortable.jQuery('div.{{ inline_admin_formset.formset.ng_sortable_class_name }} table tbody').sortable({
+            items: "tr:not(.add-row)",
+            start: function(event, ui) {
+                ui.item[0].style.cursor = 'move';
+            },
+            stop: function(event, ui) {
+                ui.item[0].style.cursor = 'auto';
+                if (color_selected.length > 0) ui.item[0].style.backgroundColor = color_selected;
+                set_positions();
+            }
+        })
 
 
     });
 
 
-    isortable.jQuery('div.{{ inline_admin_formset.formset.ng_sortable_class_name }} table tbody').sortable({
-        items: "tr:not(.add-row)",
-        start: function(event, ui) {
-            ui.item[0].style.cursor = 'move';
-        },
-        stop: function(event, ui) {
-            ui.item[0].style.cursor = 'auto';
-            if (color_selected.length > 0) ui.item[0].style.backgroundColor = color_selected;
-            set_positions();
-        }
-    })
 })(django.jQuery);
 
 </script>
