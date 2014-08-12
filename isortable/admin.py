@@ -13,7 +13,7 @@ class SortableTabularInline(admin.TabularInline):
 
     class Media:
         js = (
-            u'%sjs/jquery-1.9.1.js' % settings.STATIC_URL,
+            u'%sjs/jquery-1.9.1.min.js' % settings.STATIC_URL,
             u'%sjs/jquery-ui-1.10.3.custom.min.js' % settings.STATIC_URL,
         )
 
