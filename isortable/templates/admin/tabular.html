@@ -77,7 +77,7 @@
     $(document).ready(function($) {
         var rows = "#{{ inline_admin_formset.formset.prefix }}-group .tabular.inline-related tbody tr";
         var alternatingRows = function(row) {
-            $(row   s).not(".add-row").removeClass("row1 row2")
+            $(rows).not(".add-row").removeClass("row1 row2")
                 .filter(":even").addClass("row1").end()
                 .filter(rows + ":odd").addClass("row2");
         }
@@ -187,7 +187,18 @@
                 if (color_selected.length > 0) ui.item[0].style.backgroundColor = color_selected;
                 set_positions();
             }
-        })
+        });
+
+
+        $('.toggler').bind('click', function(){
+          var $toggler = $(this),
+              that = this,
+              field = $toggler.attr('data-field-name');
+
+          $toggler.closest('table').find('.field-'+field+' input').each(function(){
+            $(this).attr('checked', that.checked);
+          });
+        });
 
 
     });
