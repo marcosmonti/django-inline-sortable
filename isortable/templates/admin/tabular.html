@@ -1,6 +1,6 @@
-{% load i18n admin_static admin_modify %}
+{% load i18n admin_static admin_modify isortable_tags %}
 <div class="inline-group" id="{{ inline_admin_formset.formset.prefix }}-group">
-  <div class="tabular inline-related {{ inline_admin_formset.formset.ng_sortable_class_name }} {% if forloop.last %}last-related{% endif %}">
+  <div class="tabular inline-related {{ inline_admin_formset.formset.isr__class_name }} {% if forloop.last %}last-related{% endif %}">
 {{ inline_admin_formset.formset.management_form }}
 <fieldset class="module">
    <h2>{{ inline_admin_formset.opts.verbose_name_plural|capfirst }}</h2>
@@ -9,7 +9,11 @@
      <thead><tr>
      {% for field in inline_admin_formset.fields %}
        {% if not field.widget.is_hidden %}
-         <th{% if forloop.first %} colspan="2"{% endif %}{% if field.required %} class="required"{% endif %}>{{ field.label|capfirst }}
+         <th{% if forloop.first %} colspan="2"{% endif %}{% if field.required %} class="required"{% endif %}>
+
+         {% toggle_block field inline_admin_formset.formset %}
+
+         {{ field.label|capfirst }}
          {% if field.help_text %}&nbsp;<img src="{% static "admin/img/icon-unknown.gif" %}" class="help help-tooltip" width="10" height="10" alt="({{ field.help_text|striptags }})" title="{{ field.help_text|striptags }}" />{% endif %}
          </th>
        {% endif %}
@@ -73,7 +77,7 @@
     $(document).ready(function($) {
         var rows = "#{{ inline_admin_formset.formset.prefix }}-group .tabular.inline-related tbody tr";
         var alternatingRows = function(row) {
-            $(rows).not(".add-row").removeClass("row1 row2")
+            $(row   s).not(".add-row").removeClass("row1 row2")
                 .filter(":even").addClass("row1").end()
                 .filter(rows + ":odd").addClass("row2");
         }
@@ -116,22 +120,22 @@
 
         var get_element_ids = function() {
             var ids = [];
-            $('tr.form-row:not(".empty-form")', $('div.{{ inline_admin_formset.formset.ng_sortable_class_name }} table tbody')).each(function(_k, _v){
+            $('tr.form-row:not(".empty-form")', $('div.{{ inline_admin_formset.formset.isr__class_name }} table tbody')).each(function(_k, _v){
                 ids.push(_v.id);
             });
             return ids;
         }
 
         var set_positions = function() {
-            $('tr.form-row:not(".empty-form")', $('div.{{ inline_admin_formset.formset.ng_sortable_class_name }} table tbody')).each(function(_k, _v){
-                var value = (_k + 1) * {{ inline_admin_formset.formset.ng_sortable_field_multiplier }};
-                $('.field-{{ inline_admin_formset.formset.ng_sortable_field_name }} input', _v).val(value);
+            $('tr.form-row:not(".empty-form")', $('div.{{ inline_admin_formset.formset.isr__class_name }} table tbody')).each(function(_k, _v){
+                var value = (_k + 1) * {{ inline_admin_formset.formset.isr__field_multiplier }};
+                $('.field-{{ inline_admin_formset.formset.isr__field_name }} input', _v).val(value);
             })
         }
 
         var add_row = function() {
             var $ = isortable.jQuery;
-            var $tbody = $('div.{{ inline_admin_formset.formset.ng_sortable_class_name }} table tbody');
+            var $tbody = $('div.{{ inline_admin_formset.formset.isr__class_name }} table tbody');
             var $rows = $('tr.form-row:not(".empty-form")', $tbody);
             var $last_tr = $rows.last();
             var $first_tr = $rows.first();
@@ -170,10 +174,10 @@
 
 
         var first_elements_ids = get_element_ids();
-        var color_selected = '{{ inline_admin_formset.formset.ng_sortable_color_selected }}';
-        var color_new = '{{ inline_admin_formset.formset.ng_sortable_color_new }}';
+        var color_selected = '{{ inline_admin_formset.formset.isr__color_selected }}';
+        var color_new = '{{ inline_admin_formset.formset.isr__color_new }}';
 
-        isortable.jQuery('div.{{ inline_admin_formset.formset.ng_sortable_class_name }} table tbody').sortable({
+        isortable.jQuery('div.{{ inline_admin_formset.formset.isr__class_name }} table tbody').sortable({
             items: "tr:not(.add-row)",
             start: function(event, ui) {
                 ui.item[0].style.cursor = 'move';
